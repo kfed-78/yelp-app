@@ -1,19 +1,20 @@
 from flask import Flask, render_template, request
 import os
-from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv())
-import weather
+import yelp_api
+
+
 
 
 app = Flask(__name__)
 
 @app.route("/")
 def index():
-	address = request.values.get('address')
-	forecast = None
-	if address:
-		forecast = weather.get_weather(address)
-	return render_template('index.html', forecast=forecast)
+	location = request.values.get('location')
+	term = request.values.get('term')
+	businesses = None
+	if location:
+		businesses = yelp_api.get_businesses(location, term)
+	return render_template('index.html', businesses=businesses)
 
 @app.route('/about')
 def about():
